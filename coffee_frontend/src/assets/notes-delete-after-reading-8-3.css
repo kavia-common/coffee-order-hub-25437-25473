@@ -1,0 +1,156 @@
+:root {
+  /* Ocean Professional Theme Variables */
+  --color-primary: #2563EB;        /* primary */
+  --color-secondary: #F59E0B;      /* secondary/success */
+  --color-success: #F59E0B;
+  --color-error: #EF4444;
+  --color-background: #f9fafb;     /* page bg */
+  --color-surface: #ffffff;        /* card/surface */
+  --color-text: #111827;           /* text */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 2px 6px rgba(0,0,0,0.08);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+
+  /* Typography approximations (Raleway-like sans stack) */
+  --font-sans: "Raleway", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+
+  /* Screen dimensions (from JSON) */
+  --screen-width: 490px;
+  --screen-height: 812px;
+
+  /* Spacing derived from JSON positions to center inner frame visually */
+  --container-width: 423px;  /* JSON: Notes frame width */
+  --container-height: 575px; /* JSON: Notes frame height */
+}
+
+/* Reset/structure */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.45;
+}
+
+/* Accessibility helpers */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Page container centers the artboard */
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background-image: linear-gradient(180deg, rgba(37,99,235,0.08), #f9fafb 60%);
+}
+
+/* Artboard representing the Figma root frame (8:3) */
+.frame {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* Inner Notes container (8:18) - centered to match provided x/y while ensuring visual alignment.
+   JSON shows Notes container width 423 and height 575. We'll center within 490x812.
+*/
+.notes-container {
+  position: absolute;
+  width: var(--container-width);
+  height: var(--container-height);
+  left: calc((var(--screen-width) - var(--container-width)) / 2);   /* center horizontally */
+  top: calc((var(--screen-height) - var(--container-height)) / 2); /* center vertically */
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+/* Title (8:4) exact size guidance: width 155, height 45 - use font sizing/line-height to approximate */
+.notes-header {
+  margin: 0;
+  padding: 0;
+}
+
+.notes-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 28px;     /* approximated to fill 45px height with line-height */
+  line-height: 45px;   /* matching height from JSON for crisp baseline */
+  letter-spacing: 0.2px;
+  color: var(--color-text);
+  /* Subtle underline accent using primary color to fit Ocean Professional style */
+  position: relative;
+}
+
+.notes-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  width: 44px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+/* Body text container (8:5) exact box in JSON is the remainder area - give top spacing to match visual */
+.notes-body {
+  margin-top: 16px;
+}
+
+.notes-text {
+  margin: 0 0 12px 0;
+  font-weight: 500;
+  font-size: 16px;   /* readable while keeping close to mobile typography */
+  line-height: 24px; /* ensure legibility and snap to 8px baseline */
+  color: #374151;    /* slightly softer than --color-text for body content */
+}
+
+/* Focus styles for keyboard navigation */
+.notes-container:focus,
+.notes-title:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive presentation: scale the artboard to fit smaller screens */
+@media (max-width: 520px) {
+  .frame {
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
+}
+
+@media (max-width: 440px) {
+  .frame {
+    transform: scale(0.85);
+  }
+}
+
+/* High-contrast mode support */
+@media (prefers-contrast: more) {
+  .notes-title::after {
+    background: var(--color-secondary);
+  }
+}
