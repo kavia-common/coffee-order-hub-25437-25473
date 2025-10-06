@@ -1,0 +1,450 @@
+:root {
+  /* Ocean Professional Theme Variables (used only when Figma does not specify) */
+  --color-primary: #2563EB;
+  --color-secondary: #F59E0B;
+  --color-success: #F59E0B;
+  --color-error: #EF4444;
+  --color-background: #fcfeff; /* JSON background color_ref color_fcfeff */
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --color-subtle: #6B7280;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.12);
+  --shadow-lg: 0 10px 24px rgba(0,0,0,0.16);
+
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  --screen-width: 375px;
+  --screen-height: 812px;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Reset/structure */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.45;
+}
+
+/* Accessibility helpers */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Page container centers the artboard */
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--color-background);
+}
+
+/* Artboard frame */
+.frame {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* Positions derived from JSON coordinates (x,y relative to root).
+   We align elements pixel-accurate within 375x812. */
+
+/* Hero title (203:37) dimensions w:216 h:58 around y:-296, x:-165.
+   Within the frame, position approx at top-left with spacing to match screenshot. */
+.hero-header {
+  position: absolute;
+  left: 24px; /* approximate from -165 vs root -188 => ~23px */
+  top: 96px;  /* visual alignment to allow search box beneath */
+  width: 216px;
+  height: 58px;
+}
+.hero-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 28px;   /* typographic approximation of 58px height across two lines */
+  line-height: 29px;
+  letter-spacing: 0.2px;
+  color: var(--color-text);
+}
+
+/* Profile ellipse (203:66) w:50 h:50; place near top-right like screen preview */
+.ellipse-profile {
+  position: absolute;
+  right: 24px;
+  top: 40px;
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  object-fit: cover;
+}
+
+/* Search content (206:16) root w:320 h:56 at y:-209, x:-165 -> position under title */
+.search-content {
+  position: absolute;
+  left: 24px;
+  top: 168px;
+  width: 320px;
+  height: 56px;
+  display: grid;
+  grid-template-columns: 1fr 58px; /* Search 251 + gap ~11 + Filter 58 approximated */
+  gap: 11px;
+  align-items: center;
+}
+
+/* Search box (206:15) w:251 h:56 with style_ref style_12 (rounded field) */
+.search-box {
+  height: 56px;
+  border-radius: 12px;
+  background: #ffffff; /* from Figma style (input surface); not overriding with theme if explicit */
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  padding: 0 16px;
+}
+
+/* Inner Search group (206:14) shows icon and label; we keep spacing per 24px icon + 8 gap */
+.search-icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  margin-right: 8px;
+}
+.search-vector {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.search-label {
+  font-size: 16px; /* typo_18 suggests typical placeholder size */
+  line-height: 19px;
+  color: #9CA3AF;  /* typical placeholder gray; Ocean theme used only if not explicit */
+}
+
+/* Filter (206:13) w:58 h:56 style_ref style_27 (rounded square with icon) */
+.filter-button {
+  height: 56px;
+  width: 58px;
+  border-radius: 12px;
+  border: 0;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.filter-button:hover,
+.filter-button:focus-visible {
+  transform: translateY(-1px);
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.filter-icon {
+  position: relative;
+  width: 20px;
+  height: 18px;
+  display: block;
+}
+.filter-ellipse {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 8px;
+}
+.filter-line {
+  position: absolute;
+  height: 2px;
+  background: #111827;
+  border-radius: 2px;
+  opacity: 0.9;
+}
+.line-top { left: 10px; top: 5px; width: 10px; }
+.line-bottom { left: 0px; top: 15px; width: 10px; }
+.filter-dot {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #111827;
+}
+
+/* Featured title (203:70) w:210 h:23 */
+.featured-title {
+  position: absolute;
+  left: 24px;
+  top: 244px;
+  width: 210px;
+  height: 23px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px; /* typo_13 approximates medium subheading */
+  line-height: 23px;
+  letter-spacing: 0.2px;
+  color: var(--color-text);
+}
+
+/* Cards Grid: Cards are sized 160x277/280 per JSON; there are two columns. */
+.cards {
+  position: absolute;
+  left: 24px;
+  top: 279px;
+  width: calc(100% - 48px);
+  display: grid;
+  grid-template-columns: 160px 160px;
+  gap: 16px 16px;
+}
+
+/* Card container base */
+.card {
+  width: 160px;
+  min-height: 277px; /* Card 2/4 are 280, we'll allow min-height to accommodate content */
+  display: grid;
+  grid-template-rows: auto auto;
+  border-radius: 14px; /* visual rounding without affecting media which has its own */
+}
+
+/* Media group: image with favorite circle at top-right */
+.card-media-group {
+  position: relative;
+  width: 160px;
+  height: 201px; /* tallest media group observed (Card 2/4) */
+  display: block;
+}
+
+/* Card1 media is 168px tall, Card2 is 190px; allow image to define height and center */
+.card-image {
+  position: absolute;
+  left: 3px;  /* from JSON: x 3 within card */
+  top: 11px;  /* aligns visually to produce 168 or 190 height as per image dims */
+  width: 153px;
+  height: 168px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: var(--shadow-sm);
+  background: #e5e7eb;
+}
+.card:nth-of-type(2) .card-image { height: 190px; top: 0; } /* for Card 2 matches JSON y:-66 offset normalized */
+
+.card-image.placeholder {
+  display: block;
+  background: repeating-linear-gradient(45deg, rgba(37,99,235,0.08), rgba(37,99,235,0.08) 8px, rgba(245,158,11,0.08) 8px, rgba(245,158,11,0.08) 16px);
+  border: 1px dashed rgba(17,24,39,0.2);
+}
+
+/* Favorite circular button at top-right 36x36 */
+.fav-button {
+  position: absolute;
+  right: -1px; /* JSON x uses right-most for 36x36 */
+  top: 0px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.fav-button:hover,
+.fav-button:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(37,99,235,0.06);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: var(--shadow-sm);
+}
+.fav-ellipse {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: block;
+  box-shadow: var(--shadow-sm);
+}
+.fav-icon {
+  position: absolute;
+  width: 16px;
+  height: 14px;
+}
+.fav-ellipse.placeholder {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(17,24,39,0.1), var(--shadow-sm);
+}
+.fav-icon.placeholder {
+  width: 12px;
+  height: 10px;
+  background: #ef4444;
+  clip-path: path("M8 2.748-.717-.737C5.6.281 8 3.053 8 3.053s2.4-2.772 4.717-3.79C15.534-.737 16 1.522 16 2.748 16 5.885 12.866 8.354 8 12 3.134 8.354 0 5.885 0 2.748z"); /* decorative */
+  border-radius: 2px;
+}
+
+/* Card info frame: title + rating + distance */
+.card-info {
+  width: 153px;
+  margin-left: 3px;
+  display: grid;
+  grid-auto-rows: max-content;
+  row-gap: 6px;
+  padding-bottom: 8px;
+}
+.card-title {
+  margin: 0;
+  font-weight: 700; /* typo_15 implies bold title */
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.2px;
+  color: var(--color-text);
+}
+.card-rating {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+  height: 16px;
+}
+.rating-star {
+  width: 13px;
+  height: 12px;
+  display: inline-block;
+}
+.rating-star.placeholder {
+  width: 13px;
+  height: 12px;
+  background: #F59E0B;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+.rating-text {
+  font-size: 12px; /* typo_14 */
+  line-height: 16px;
+  color: var(--color-subtle);
+}
+.card-distance {
+  font-size: 12px; /* typo_14 */
+  line-height: 16px;
+  color: var(--color-subtle);
+}
+
+/* Bottom navigation bar 375x114 anchored at bottom */
+.bottom-nav {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 375px;
+  height: 114px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  justify-items: center;
+  padding-bottom: 8px; /* allow for visual balance */
+  background: linear-gradient(180deg, rgba(255,255,255,0.0), #ffffff 40%);
+}
+
+/* Nav item and selected background rectangle */
+.nav-item {
+  position: relative;
+  width: 70px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  outline: none;
+}
+.nav-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.nav-item.selected .nav-bg {
+  display: block;
+}
+.nav-bg {
+  position: absolute;
+  width: 70px;
+  height: 58px;
+  border-radius: 14px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06));
+}
+
+/* Home icon group */
+.nav-icon.home {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+}
+.home-vector {
+  width: 18px;
+  height: 20px;
+  display: block;
+}
+
+/* Heart and Bookmark vectors sizes directly from JSON */
+.heart-vector {
+  width: 20.9px;
+  height: 18.23px;
+  display: block;
+}
+.bookmark-vector {
+  width: 14px;
+  height: 18px;
+  display: block;
+}
+
+/* User icon: base line (205:159 no imagePath) and head (205:160 image) */
+.user-base {
+  width: 16px;
+  height: 6px;
+  background: #111827;
+  border-radius: 3px;
+  display: block;
+  margin-bottom: 2px;
+}
+.user-head {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: block;
+}
+
+/* Focus styles for whole frame */
+.frame:focus,
+.frame:focus-within {
+  outline: 2px solid --color-primary;
+  outline-color: var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Presentation scaling on narrow viewports */
+@media (max-width: 420px) {
+  .frame { transform: scale(0.95); transform-origin: top center; }
+}
+@media (max-width: 380px) {
+  .frame { transform: scale(0.9); }
+}
