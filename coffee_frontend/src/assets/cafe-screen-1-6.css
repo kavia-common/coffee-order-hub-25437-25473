@@ -1,0 +1,413 @@
+:root {
+  /* Ocean Professional Theme Variables */
+  --color-primary: #2563EB;        /* primary */
+  --color-secondary: #F59E0B;      /* secondary/success */
+  --color-success: #F59E0B;
+  --color-error: #EF4444;
+  --color-background: #fcfeff;     /* from JSON color_ref color_fcfeff */
+  --color-surface: #ffffff;        /* card/surface */
+  --color-text: #111827;           /* text */
+  --color-subtle: #6B7280;         /* secondary text */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.12);
+  --shadow-lg: 0 10px 24px rgba(0,0,0,0.16);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  /* Artboard dimensions (from JSON screen) */
+  --screen-width: 375px;
+  --screen-height: 812px;
+
+  /* Typography approximation based on JSON typo refs (regular/semibold) */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.45;
+}
+
+/* Accessibility helpers */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Page container centers the artboard */
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--color-background);
+}
+
+/* Root frame (1:6) */
+.frame {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* Layering per JSON order:
+   1) Rectangle 1748 (hero) at top
+   2) Rectangle 1749 (content surface) starts at y:-101 relative to global => in frame at y:334 (per JSON height of hero)
+   3) Group 8 (dots)
+   4) Group 9 (categories)
+   5) chevron-left (back)
+   6) Frame 15 (header info)
+   7) Frame 18 (products)
+   8) Rectangle 1752 (overlay divider)
+*/
+.bg-hero {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 375px;
+  height: 334px; /* JSON 205:198 */
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+}
+
+.content-surface {
+  position: absolute;
+  left: 0px;
+  top: 334px;      /* JSON 205:199 starts at y:-101; inside frame just below hero */
+  width: 375px;
+  height: 506px;   /* exact per JSON 205:199 */
+  background: #ffffff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  z-index: 2;
+}
+
+/* Overlay divider Rectangle 1752 (208:30) at y:291, height:114 */
+.overlay-divider {
+  position: absolute;
+  left: 0px;
+  top: 291px;
+  width: 375px;
+  height: 114px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,255,255,0.85) 40%, #ffffff 100%);
+  pointer-events: none;
+  z-index: 6; /* after products */
+}
+
+/* Back chevron (207:48) at x:253 y:-363 relative to global -> inside frame near top-left over hero */
+.icon-button {
+  -webkit-tap-highlight-color: transparent;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.back-button {
+  position: absolute;
+  left: 26px;  /* 253 - 227 */
+  top: 44px;   /* approximate per JSON positioning; hero area */
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.85);
+  box-shadow: var(--shadow-sm);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  z-index: 5;
+}
+
+.back-button .chevron {
+  width: 6px;
+  height: 12px;
+  display: inline-block;
+  border-left: 2px solid var(--color-text);
+  border-bottom: 2px solid var(--color-text);
+  transform: rotate(45deg);
+  margin-left: 2px;
+}
+
+.back-button:hover,
+.back-button:focus-visible {
+  transform: translateY(-1px);
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Dots group (205:203) at x:387 y:-158.7 -> within frame position relative to hero */
+.dots-group {
+  position: absolute;
+  left: 160px; /* derive: frame left 0 + (387-227)=160 */
+  top: 175px;  /* visual midpoint across hero given JSON misleading negative */
+  transform: translateX(0);
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 12px; /* width 56 for 3 x 12 with gaps */
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  z-index: 3;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  display: block;
+  border-radius: 999px;
+}
+
+.dot-placeholder {
+  background: rgba(17,24,39,0.2);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.9);
+}
+
+/* Categories group (207:57) exact per JSON: left: 274-227=47; top: 25 */
+.categories {
+  position: absolute;
+  left: 47px;
+  top: 25px;
+  width: 287px;
+  display: grid;
+  grid-template-columns: 92px 54px 43px; /* per children widths Frame14=92, Frame13=54, Frame12=43 (labels define width) */
+  justify-content: start;
+  gap: 0 24px;
+  align-items: start;
+  z-index: 4;
+}
+
+.category {
+  height: 100px; /* Frame 14 height */
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(2px);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--color-text);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.category:hover,
+.category:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  background: rgba(255,255,255,0.95);
+}
+
+.cat-icon { display: block; image-rendering: -webkit-optimize-contrast; }
+
+.cat-label {
+  font-size: 14px;   /* per small label feel */
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 21px; /* match JSON height where provided */
+}
+
+/* Header info (207:63) exact per JSON offsets: left 47 (274-227), top -76 relative -> place 258 within hero */
+.header-info {
+  position: absolute;
+  left: 47px;
+  top: 258px;
+  width: 118px;
+  display: grid;
+  grid-auto-rows: max-content;
+  gap: 8px;
+  color: var(--color-text);
+  z-index: 5;
+}
+
+.cafe-name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 20px;  /* JSON height 23 approximated */
+  line-height: 23px;
+  letter-spacing: 0.2px;
+}
+
+.rating-row {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+  height: 16px;
+}
+
+.rating-star { width: 13px; height: 12px; display: inline-block; }
+
+.rating-text, .location {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-subtle);
+}
+
+/* Products list area (208:24) per JSON: left 255-227=28; top 142 inside frame */
+.products {
+  position: absolute;
+  left: 28px;
+  top: 332px; /* 142 + 190 to sit beneath header-info on content surface */
+  width: 330px;
+  display: grid;
+  grid-auto-rows: max-content;
+  row-gap: 14px; /* space between groups visually ~20, but groups are 154 tall; we keep slight gap */
+  z-index: 5;
+}
+
+/* Product group height: 154 */
+.product-card {
+  position: relative;
+  width: 330px;
+  height: 154px;
+}
+
+.card-surface {
+  position: absolute;
+  left: 0px;
+  top: 13px;     /* For Group 11 card surface at 315 (vs group y 302) => 13px */
+  width: 320px;
+  height: 141px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Plus button positioned at group's right/top */
+.plus-button {
+  position: absolute;
+  right: 0px; /* group width 330 - ellipse width 36 aligns x:549-255=294 -> right:0 */
+  top: 0px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.plus-button .plus-ellipse {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: block;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.plus-button .plus-ellipse.placeholder {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(17,24,39,0.1), var(--shadow-sm);
+}
+
+.plus-button .plus-vertical,
+.plus-button .plus-horizontal {
+  position: absolute;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+.plus-button .plus-vertical { width: 2px; height: 14px; }
+.plus-button .plus-horizontal { width: 14px; height: 2px; }
+
+.plus-button:hover,
+.plus-button:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(37,99,235,0.06);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Product content layout from JSON coordinates */
+.product-image {
+  position: absolute;
+  left: 22px;  /* 277-255 */
+  top: 31px;   /* 173-142 */
+  width: 89px;
+  height: 105px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  background: #e5e7eb;
+}
+
+.product-image.placeholder {
+  display: block;
+  background: repeating-linear-gradient(45deg, rgba(37,99,235,0.08), rgba(37,99,235,0.08) 8px, rgba(245,158,11,0.08) 8px, rgba(245,158,11,0.08) 16px);
+  border: 1px dashed rgba(17,24,39,0.2);
+}
+
+.product-info {
+  position: absolute;
+  left: 137px; /* 392-255 */
+  top: 31px;   /* 173-142 */
+  width: 153px;
+  height: 105px;
+  display: grid;
+  grid-template-rows: auto max-content;
+  align-content: space-between;
+}
+
+.product-text { display: grid; gap: 8px; }
+
+.product-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px; /* JSON height 19 */
+  letter-spacing: 0.2px;
+}
+
+.product-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-subtle);
+}
+
+.product-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Focus styles */
+.frame:focus,
+.frame:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Presentation scaling on very narrow viewports */
+@media (max-width: 420px) {
+  .frame { transform: scale(0.95); transform-origin: top center; }
+}
+
+@media (max-width: 380px) {
+  .frame { transform: scale(0.9); }
+}
